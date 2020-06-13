@@ -1,6 +1,11 @@
 OS := $(shell uname -s | tr A-Z a-z)
 
 LIB := fuzzymatch_rs
+ifeq ($(origin CARGO_TARGET_DIR), undefined)
+	TARGET_DIR := fuzzymatch-rs/target/release
+else
+	TARGET_DIR := $(CARGO_TARGET_DIR)release
+endif
 
 help:
 	@echo "usage: make [OPTIONS]"
@@ -21,10 +26,10 @@ run-cargo:
 
 ifeq ($(OS),darwin)
 move-so: run-cargo
-	cp -f fuzzymatch-rs/target/release/lib$(LIB).dylib $(LIB).so
+	cp -f $(TARGET_DIR)/lib$(LIB).dylib $(LIB).so
 else
 move-so: run-cargo
-	cp -f fuzzymatch-rs/target/release/lib$(LIB).so $(LIB).so
+	cp -f $(TARGET_DIR)/lib$(LIB).so $(LIB).so
 endif
 
 post-check:
